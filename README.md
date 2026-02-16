@@ -112,8 +112,8 @@ NEXT_PUBLIC_SUPABASE_URL=https://zzbujehrmhimdjayjivg.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_7s6j6ksqQJuU3SdFRVY0ng_rFhJ_YIY
 
 Backend (server/.env)
-# Set your Supabase database URL with credentials here
-DATABASE_URL="your Supabase database URL with credentials"
+# Server environment variable
+DATABASE_URL="your_supabase_database_url_here"
 
 
 
