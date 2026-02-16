@@ -9,6 +9,7 @@ import StepIndicator from "./StepIndicator";
 
 import { stepTwoSchema } from "../lib/validations";
 
+
 export function PainArea() {
   const [isOtherClicked, setIsOtherClicked] = useState(false);
 
@@ -17,9 +18,6 @@ export function PainArea() {
   const isValid = stepTwoSchema.safeParse(dataForm).success;
 
   const result = stepTwoSchema.safeParse(dataForm);
-
-  console.log(isValid);
-  console.log(result);
 
   useEffect(() => {
     if (dataForm.painArea.includes("other")) {

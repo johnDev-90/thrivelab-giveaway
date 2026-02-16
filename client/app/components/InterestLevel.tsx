@@ -27,29 +27,35 @@ async function handleFinalSubmit() {
   try {
     setIsSubmitting(true);
 
-    // Crear client de Supabase
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
-    // Insertar datos en la tabla 'giveaway'
+
     const { data, error } = await supabase.from("FormData").insert([dataForm]);
 
-    if (error) {
-      console.error(error);
-      Swal.fire({
-        title: "Oops!",
-        text: error.message || "Something went wrong!",
-        confirmButtonText: "Got it",
-        confirmButtonColor: "#3d4f3a",
-      });
-      return;
-    }
+   if (error) {
+  console.error(error);
 
+  let message = "Something went wrong!";
+
+  if (error.code === "23505") {
+    message = "You have already entered this giveaway.";
+  }
+
+  Swal.fire({
+    title: "Oops!",
+    text: message,
+    confirmButtonText: "Got it",
+    confirmButtonColor: "#3d4f3a",
+  });
+  return;
+}
     console.log("Datos insertados:", data);
 
-    // Simular tiempo de espera
+
     await new Promise((resolve) => setTimeout(resolve, 800));
 
     nextStep();
