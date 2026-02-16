@@ -6,6 +6,5 @@ import { PrismaService } from '../prisma/prisma.service.js';
 @Module({
   providers: [GiveawayService],
   controllers: [GiveawayController],
-
 })
 export class GiveawayModule {}

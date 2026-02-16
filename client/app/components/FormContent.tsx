@@ -1,17 +1,15 @@
-import { DataContext , useData} from "../contexts/GiveawayContext"
+import { DataContext, useData } from "../contexts/GiveawayContext";
 
-
-import ContactInfo from '../components/ContactInfo'
-import InterestLevel from '../components/InterestLevel';
-import PainArea from '../components/PainArea';
-import WhyNotYet from '../components/WhyNotYet';
-import Confirmation from '../components/Confirmation';
-
+import ContactInfo from "../components/ContactInfo";
+import InterestLevel from "../components/InterestLevel";
+import PainArea from "../components/PainArea";
+import WhyNotYet from "../components/WhyNotYet";
+import Confirmation from "../components/Confirmation";
 
 const FormContent = () => {
-  const { step } = useData()
+  const { step } = useData();
 
-  console.log(step)
+  console.log(step);
 
   return (
     <>
@@ -21,7 +19,7 @@ const FormContent = () => {
       {step === 4 && <InterestLevel />}
       {step === 5 && <Confirmation />}
     </>
-  )
-}
+  );
+};
 
 export default FormContent;

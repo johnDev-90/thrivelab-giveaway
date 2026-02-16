@@ -4,15 +4,17 @@ import { GiveAwayDto } from './DTO/giveAway.dto.js';
 
 @Injectable()
 export class GiveawayService {
-    constructor(private readonly prisma : PrismaService){}
+  constructor(private readonly prisma: PrismaService) {}
 
-    async createNewform(data : GiveAwayDto){
-        
-        const emailExist = await this.prisma.formData.findUnique({where:{email:data.email}});
-        if (emailExist) throw new ConflictException('You have already entered this giveaway.');
+  async createNewform(data: GiveAwayDto) {
+    const emailExist = await this.prisma.formData.findUnique({
+      where: { email: data.email },
+    });
+    if (emailExist)
+      throw new ConflictException('You have already entered this giveaway.');
 
-        return this.prisma.formData.create({
-            data:data
-        })
-    }
+    return this.prisma.formData.create({
+      data: data,
+    });
+  }
 }

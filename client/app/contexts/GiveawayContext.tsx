@@ -1,88 +1,72 @@
-'use client'
+"use client";
 
-import { createContext, useContext,useState, ReactNode, useEffect } from "react";
+import { FormData } from "../types/giveAwayTypes";
+
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 type DataContextType = {
   dataForm: FormData;
-  step:number;
+  step: number;
   setDataForm: React.Dispatch<React.SetStateAction<FormData>>;
-  nextStep:() => void
-  prevStep :() => void
-  initialDataForm:FormData
- 
-  
-};
-
-type FormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  instagramHandle: string;
-  painArea: string[];
-  painAreaOther: string;
-  whyNotYet: string[];
-  interestLevel: string;
+  nextStep: () => void;
+  prevStep: () => void;
+  initialDataForm: FormData;
 };
 
 const initialDataForm = {
-    firstName:"",
-    lastName:"",
-    email:"",
-    phone:"",
-    instagramHandle:"",
-    painArea:[],
-    painAreaOther:"",
-    whyNotYet:[],
-    interestLevel:"",
-}
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  instagramHandle: "",
+  painArea: [],
+  painAreaOther: "",
+  whyNotYet: [],
+  interestLevel: "",
+};
 
-
-export const DataContext = createContext<DataContextType | undefined>(undefined)
+export const DataContext = createContext<DataContextType | undefined>(
+  undefined,
+);
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
-
-      
-
   const [dataForm, setDataForm] = useState<FormData>(initialDataForm);
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1);
 
-const nextStep = () => setStep(prev => prev + 1)
-const prevStep = () => setStep(prev => (prev > 1? prev -1 : prev))
+  const nextStep = () => setStep((prev) => prev + 1);
+  const prevStep = () => setStep((prev) => (prev > 1 ? prev - 1 : prev));
 
+  console.log(dataForm);
 
+  useEffect(() => {
+    const storedDataForm = localStorage.getItem("dataForm");
 
-  console.log(dataForm)
-
- useEffect(() => {
-   const storedDataForm = localStorage.getItem('dataForm');
-
-   if (storedDataForm) {
+    if (storedDataForm) {
       setDataForm(JSON.parse(storedDataForm));
-   }
- 
- },[])
+    }
+  }, []);
 
- useEffect(() => {
-
-    localStorage.setItem('dataForm',JSON.stringify(dataForm));
-
- },[dataForm])
- 
+  useEffect(() => {
+    localStorage.setItem("dataForm", JSON.stringify(dataForm));
+  }, [dataForm]);
 
   return (
-    <DataContext.Provider value={{ 
-        dataForm, 
+    <DataContext.Provider
+      value={{
+        dataForm,
         setDataForm,
         step,
         nextStep,
         prevStep,
-        initialDataForm
-   
-        
-
-
-    }}>
+        initialDataForm,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );

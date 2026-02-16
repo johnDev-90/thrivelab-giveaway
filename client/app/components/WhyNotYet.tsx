@@ -1,27 +1,20 @@
-import React from 'react'
+import React from "react";
 
-import { useData } from '../contexts/GiveawayContext';
-import StepIndicator from './StepIndicator';
-import { stepThreeSchema } from '../lib/validations';
+import { useData } from "../contexts/GiveawayContext";
+import StepIndicator from "./StepIndicator";
+import { stepThreeSchema } from "../lib/validations";
 
-
-import ContinueButton from './ContinueButton';
-
+import ContinueButton from "./ContinueButton";
 
 const WhyNotYet = () => {
+  const { prevStep, nextStep, dataForm, setDataForm } = useData();
 
-  const {prevStep, nextStep, dataForm,setDataForm} = useData()
+  const isValid = stepThreeSchema.safeParse(dataForm).success;
 
-   const isValid = stepThreeSchema.safeParse(dataForm).success
-      
-        const result = stepThreeSchema.safeParse(dataForm)
+  const result = stepThreeSchema.safeParse(dataForm);
 
-        console.log(isValid)
-        console.log(result)
-    
-    return (
+  return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="text-center mb-8">
         <p className="text-sm font-medium text-gray-600 uppercase tracking-wide mb-2">
           Exclusive Giveaway
@@ -38,8 +31,8 @@ const WhyNotYet = () => {
         </h2>
       </div>
 
-         <legend  
-     className={`
+      <legend
+        className={`
 
       
        
@@ -48,18 +41,21 @@ const WhyNotYet = () => {
     pt-3
     text-xs
     transition-all duration-300 ease-in-out
-    ${!isValid
-      ? "max-h-40 opacity-100 translate-y-0"
-      : "max-h-0 opacity-0 -translate-y-2"}
+    ${
+      !isValid
+        ? "max-h-40 opacity-100 translate-y-0"
+        : "max-h-0 opacity-0 -translate-y-2"
+    }
       
       `}
-      
-      >Please select at least one option<span className="text-red-700 text-base font-bold">*</span></legend>
+      >
+        Please select at least one option
+        <span className="text-red-700 text-base font-bold">*</span>
+      </legend>
 
-      {/* Checkbox Options (Multi-select) */}
       <div className="space-y-3">
-        {/* Option 1 */}
-        <label className="
+        <label
+          className="
           flex items-center justify-between
           w-full px-4 py-4
           border border-gray-300 rounded-xl
@@ -67,21 +63,23 @@ const WhyNotYet = () => {
           cursor-pointer
           hover:bg-gray-50
           transition-all
-        ">
+        "
+        >
           <span className="text-base text-gray-900">
             I don't know who I can trust
           </span>
           <input
-          
-          checked={dataForm.whyNotYet.includes('trust')}
-          onChange={(e) => {
-            const {value,checked} = e.target
+            checked={dataForm.whyNotYet.includes("trust")}
+            onChange={(e) => {
+              const { value, checked } = e.target;
 
-            setDataForm((prev) => ({
-              ...prev,
-              whyNotYet:checked?[...prev.whyNotYet,value]:prev.whyNotYet.filter(item => item !== value)
-            }))
-          }}
+              setDataForm((prev) => ({
+                ...prev,
+                whyNotYet: checked
+                  ? [...prev.whyNotYet, value]
+                  : prev.whyNotYet.filter((item) => item !== value),
+              }));
+            }}
             type="checkbox"
             name="whyNotYet"
             value="trust"
@@ -89,8 +87,8 @@ const WhyNotYet = () => {
           />
         </label>
 
-        {/* Option 2 */}
-        <label className="
+        <label
+          className="
           flex items-center justify-between
           w-full px-4 py-4
           border border-gray-300 rounded-xl
@@ -98,21 +96,21 @@ const WhyNotYet = () => {
           cursor-pointer
           hover:bg-gray-50
           transition-all
-        ">
-          <span className="text-base text-gray-900">
-            The cost of treatment
-          </span>
+        "
+        >
+          <span className="text-base text-gray-900">The cost of treatment</span>
           <input
+            checked={dataForm.whyNotYet.includes("cost")}
+            onChange={(e) => {
+              const { value, checked } = e.target;
 
-          checked={dataForm.whyNotYet.includes('cost')}
-          onChange={(e) => {
-            const {value,checked} = e.target
-
-            setDataForm((prev) => ({
-              ...prev,
-              whyNotYet:checked?[...prev.whyNotYet,value]:prev.whyNotYet.filter(item => item !== value)
-            }))
-          }}
+              setDataForm((prev) => ({
+                ...prev,
+                whyNotYet: checked
+                  ? [...prev.whyNotYet, value]
+                  : prev.whyNotYet.filter((item) => item !== value),
+              }));
+            }}
             type="checkbox"
             name="whyNotYet"
             value="cost"
@@ -120,8 +118,8 @@ const WhyNotYet = () => {
           />
         </label>
 
-        {/* Option 3 */}
-        <label className="
+        <label
+          className="
           flex items-center justify-between
           w-full px-4 py-4
           border border-gray-300 rounded-xl
@@ -129,21 +127,23 @@ const WhyNotYet = () => {
           cursor-pointer
           hover:bg-gray-50
           transition-all
-        ">
+        "
+        >
           <span className="text-base text-gray-900">
             I'm still learning more about it
           </span>
           <input
+            checked={dataForm.whyNotYet.includes("learning")}
+            onChange={(e) => {
+              const { value, checked } = e.target;
 
-          checked={dataForm.whyNotYet.includes('learning')}
-          onChange={(e) => {
-            const {value,checked} = e.target
-
-            setDataForm((prev) => ({
-              ...prev,
-              whyNotYet:checked?[...prev.whyNotYet,value]:prev.whyNotYet.filter(item => item !== value)
-            }))
-          }}
+              setDataForm((prev) => ({
+                ...prev,
+                whyNotYet: checked
+                  ? [...prev.whyNotYet, value]
+                  : prev.whyNotYet.filter((item) => item !== value),
+              }));
+            }}
             type="checkbox"
             name="whyNotYet"
             value="learning"
@@ -152,21 +152,16 @@ const WhyNotYet = () => {
         </label>
       </div>
 
-      {/* Continue Button */}
-
       <ContinueButton isValid={isValid} />
-     
 
-
-      {/* Disclaimer */}
       <p className="text-sm text-gray-500 text-center mt-6 px-4 leading-relaxed">
-        This is an in-home treatment. If you are not located in one of our service areas, travel will be required.
+        This is an in-home treatment. If you are not located in one of our
+        service areas, travel will be required.
       </p>
 
       <StepIndicator />
     </div>
   );
-}
+};
 
-export default WhyNotYet
-
+export default WhyNotYet;
