@@ -129,6 +129,7 @@ Error handling: Duplicate emails trigger a 409 Conflict from the backend and are
 
 Project structure: Separated frontend (client) and backend (server) in a single repository. The Next.js frontend uses the App Router without a src folder, organizing components directly in client/app/components.
 
+
 Trade-offs
 
 Simplified state management using Context API instead of Redux to save development time.
@@ -137,13 +138,13 @@ Used localStorage for temporary persistence instead of saving drafts in the data
 
 Frontend validation handled via Zod and Tailwind, without complex form libraries.
 
-Assumptions
 
-Phone numbers follow US format: (###) ###-####
+Assumptions
 
 Instagram handle is optional
 
 Users will complete the form in one session, so localStorage is sufficient for persistence
+
 
 Future Improvements
 
@@ -155,14 +156,5 @@ Add server-side validation for additional security
 
 Enhance animations with more engaging transitions
 
-Screenshots
-
-Here you can add images of your app, Lighthouse scores, or error messages:
-
-Duplicate Email Error
-
-Invalid Phone Number
-
-Lighthouse Scores / App Preview
 
 
