@@ -11,6 +11,7 @@ const ContinueButton = ({isValid}:Props) => {
     const {nextStep} = useData()
   return (
          <button
+         type='submit'
       onClick={nextStep}
         disabled={!isValid && true}
         className={`${!isValid && 'cursor-not-allowed bg-gray-400  '} w-full py-4 px-6 rounded-xl

@@ -1,56 +1,49 @@
 'use client'
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
+import { IMaskInput } from "react-imask";
+import { z } from "zod";
 
 import { stepOneSchema } from "../lib/validations";
-
 import { useData } from "../contexts/GiveawayContext";
 import ContinueButton from "./ContinueButton";
+import StepIndicator from "./StepIndicator";
 
-
-
+type StepOneFields = z.infer<typeof stepOneSchema>;
 
 function ContactInfo() {
 
+  const { dataForm, setDataForm } = useData();
 
+  const [errors, setErrors] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+  }>({});
 
+  const isValid = stepOneSchema.safeParse(dataForm).success;
 
-  const {dataForm,setDataForm} = useData()
+  function validateField(
+  field: keyof StepOneFields,
+  value?: string
+) {
 
-  const [emailError, setEmailError] = useState<string>('')
+  const fieldSchema = stepOneSchema.shape[field];
 
- 
+  const result = fieldSchema.safeParse(
+    value ?? dataForm[field]
+  );
 
-  const isValid = stepOneSchema.safeParse(dataForm).success
-
-  const result = stepOneSchema.safeParse(dataForm)
-
-
-
-  useEffect(() => {
-
-    if (isValid) {
-      setEmailError('')
-    }
-
-  },[isValid])
- 
-
- function handleEmailError(){
-
-   if (result.error?.issues[0].code === 'invalid_format') {
-    setEmailError(result.error?.issues[0].message)
-      
-      return
-  }
-
-  
-  }
-
-
- 
+  setErrors((prev) => ({
+    ...prev,
+    [field]: result.success ? undefined : result.error.issues[0].message,
+  }));
+}
 
   return (
     <div className="space-y-6">
+
       {/* Header */}
       <div className="text-center mb-8">
         <p className="text-sm font-medium text-gray-600 uppercase tracking-wide mb-2">
@@ -61,168 +54,157 @@ function ContactInfo() {
         </h1>
       </div>
 
-      {/* Form Fields */}
       <div className="space-y-4">
-        {/* First Name & Last Name - Side by side en desktop, stack en mobile */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* First Name */}
-          <div>
-            <label className="block text-sm font-normal text-gray-700 mb-2">
-              First Name
-            </label>
-            <input
-            value={dataForm.firstName}
-            onChange={(e) => setDataForm((prev) => ({
-              ...prev,
-              firstName:e.target.value
-            }))}
-              type="text"
-              placeholder="First Name"
-              className="
-                w-full px-4 py-3.5
-                border border-gray-300 rounded-xl
-                bg-white
-                text-gray-900 text-base
-                placeholder:text-gray-400
-                focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300
-                transition-all
-              "
-            />
-          </div>
 
-          {/* Last Name */}
-          <div>
-            <label className="block text-sm font-normal text-gray-700 mb-2">
-              Last Name
-            </label>
-            <input
-            value={dataForm.lastName}
-            onChange={(e) => setDataForm((prev) => ({
-              ...prev,
-              lastName:e.target.value
-            }))}
-              type="text"
-              placeholder="Last Name"
-              className="
-                w-full px-4 py-3.5
-                border border-gray-300 rounded-xl
-                bg-white
-                text-gray-900 text-base
-                placeholder:text-gray-400
-                focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300
-                transition-all
-              "
-            />
-          </div>
+        {/* First Name */}
+        <div>
+          <label className="block text-sm text-gray-700 mb-2">
+            First Name
+          </label>
+          <input
+            value={dataForm.firstName}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDataForm(prev => ({ ...prev, firstName: value }));
+
+              if (errors.firstName) {
+                validateField("firstName");
+              }
+            }}
+            onBlur={() => validateField("firstName")}
+            type="text"
+            placeholder="First Name"
+            className={`w-full px-4 py-3.5 border rounded-xl transition-all ${
+              errors.firstName ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.firstName && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.firstName}
+            </p>
+          )}
         </div>
 
-        {/* Instagram Handle */}
+        {/* Last Name */}
         <div>
-          <label className="block text-sm font-normal text-gray-700 mb-2">
+          <label className="block text-sm text-gray-700 mb-2">
+            Last Name
+          </label>
+          <input
+            value={dataForm.lastName}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDataForm(prev => ({ ...prev, lastName: value }));
+
+              if (errors.lastName) {
+                validateField("lastName");
+              }
+            }}
+            onBlur={() => validateField("lastName")}
+            type="text"
+            placeholder="Last Name"
+            className={`w-full px-4 py-3.5 border rounded-xl transition-all ${
+              errors.lastName ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.lastName && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.lastName}
+            </p>
+          )}
+        </div>
+
+        {/* Instagram */}
+        <div>
+          <label className="block text-sm text-gray-700 mb-2">
             Your Instagram Handle
           </label>
           <input
-          value={dataForm.instagramHandle}
-          onChange={(e) => setDataForm((prev) => ({
-            ...prev,
-            instagramHandle:e.target.value
-          }))}
+            value={dataForm.instagramHandle}
+            onChange={(e) =>
+              setDataForm(prev => ({
+                ...prev,
+                instagramHandle: e.target.value
+              }))
+            }
             type="text"
             placeholder="e.g. @thrivelab"
-            className="
-              w-full px-4 py-3.5
-              border border-gray-300 rounded-xl
-              bg-white
-              text-gray-900 text-base
-              placeholder:text-gray-400
-              focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300
-              transition-all
-            "
+            className="w-full px-4 py-3.5 border border-gray-300 rounded-xl"
           />
+        </div>
+
+        {/* Phone */}
+        <div>
+          <label className="block text-sm text-gray-700 mb-2">
+            Phone
+          </label>
+         <IMaskInput
+  mask="(000) 000-0000"
+  value={dataForm.phone}
+  onAccept={(value: string) => {
+
+    setDataForm(prev => ({ ...prev, phone: value }));
+
+    if (errors.phone) {
+      validateField("phone", value); // 👈 usamos el valor nuevo
+    }
+  }}
+  onBlur={() => validateField("phone")}
+  placeholder="(123) 456-7890"
+  className={`w-full px-4 py-3.5 border rounded-xl transition-all ${
+    errors.phone ? "border-red-500" : "border-gray-300"
+  }`}
+/>
+          {errors.phone && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.phone}
+            </p>
+          )}
         </div>
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-normal text-gray-700 mb-2">
+          <label className="block text-sm text-gray-700 mb-2">
             Email
           </label>
           <input
-          value={dataForm.email}
-          onChange={(e) => setDataForm((prev) => ({
-            ...prev,
-            email:e.target.value
-          })) }
-          onBlur={ () => handleEmailError()}
+            value={dataForm.email}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDataForm(prev => ({ ...prev, email: value }));
+
+              if (errors.email) {
+                validateField("email");
+              }
+            }}
+            onBlur={() => validateField("email")}
             type="email"
             placeholder="Your email address"
-            className="
-              w-full px-4 py-3.5
-              border border-gray-300 rounded-xl
-              bg-white
-              text-gray-900 text-base
-              placeholder:text-gray-400
-              focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300
-              transition-all
-            "
+            className={`w-full px-4 py-3.5 border rounded-xl transition-all ${
+              errors.email ? "border-red-500" : "border-gray-300"
+            }`}
           />
-          <p className="text-xs font-light text-red-700">{emailError}</p>
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.email}
+            </p>
+          )}
         </div>
+
       </div>
 
-      {/* Continue Button */}
- 
-            <ContinueButton isValid={isValid} />
-      {/* Disclaimer Text */}
+      <ContinueButton isValid={isValid} />
+
       <p className="text-sm text-gray-500 text-center mt-6 px-4 leading-relaxed">
         This is an in-home treatment. If you are not located in one of our service areas, travel will be required.
       </p>
 
-      {/* Step Indicator */}
-      <div className="flex items-center justify-center gap-3 mt-8">
-        {/* Back Arrow */}
-        <button 
-          disabled 
-          className="p-2.5 rounded-lg text-gray-300 cursor-not-allowed"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
+      <StepIndicator />
 
-        {/* Step Counter */}
-        <div className="px-6 py-2 bg-gray-200 rounded-full">
-          <span className="text-sm font-medium text-gray-600">1 / 5</span>
-        </div>
-
-        {/* Forward Arrow */}
-        <button className="p-2.5 rounded-lg text-gray-500 hover:bg-gray-100 transition-all">
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
-      </div>
     </div>
   );
 }
 
-export default ContactInfo
+export default ContactInfo;
+
+

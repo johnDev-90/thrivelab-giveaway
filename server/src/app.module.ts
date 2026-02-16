@@ -1,10 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { PrismaModule } from './prisma/prisma.module.js';
+import { GiveawayModule } from './giveaway/giveaway.module.js'; 
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // ← Hace que esté disponible en toda la app
+    }),
+    PrismaModule,
+    GiveawayModule, 
+  ],
+
 })
 export class AppModule {}

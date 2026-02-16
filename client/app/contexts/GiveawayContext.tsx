@@ -8,6 +8,9 @@ type DataContextType = {
   setDataForm: React.Dispatch<React.SetStateAction<FormData>>;
   nextStep:() => void
   prevStep :() => void
+  initialDataForm:FormData
+ 
+  
 };
 
 type FormData = {
@@ -16,9 +19,9 @@ type FormData = {
   email: string;
   phone: string;
   instagramHandle: string;
-  painArea: string;
+  painArea: string[];
   painAreaOther: string;
-  whyNotYet: string;
+  whyNotYet: string[];
   interestLevel: string;
 };
 
@@ -28,9 +31,9 @@ const initialDataForm = {
     email:"",
     phone:"",
     instagramHandle:"",
-    painArea:"",
+    painArea:[],
     painAreaOther:"",
-    whyNotYet:"",
+    whyNotYet:[],
     interestLevel:"",
 }
 
@@ -45,7 +48,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [step, setStep] = useState(1)
 
 const nextStep = () => setStep(prev => prev + 1)
-const prevStep = () => setStep(prev => prev - 1)
+const prevStep = () => setStep(prev => (prev > 1? prev -1 : prev))
 
 
 
@@ -73,7 +76,10 @@ const prevStep = () => setStep(prev => prev - 1)
         setDataForm,
         step,
         nextStep,
-        prevStep 
+        prevStep,
+        initialDataForm
+   
+        
 
 
     }}>

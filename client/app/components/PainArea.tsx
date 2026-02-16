@@ -1,10 +1,48 @@
-// components/giveaway/steps/PainArea.tsx
+'use client'
+
+import { useState, useEffect } from "react";
+
 
 import { useData } from "../contexts/GiveawayContext";
 
+import ContinueButton from "./ContinueButton";
+import StepIndicator from "./StepIndicator";
+
+import { stepTwoSchema } from "../lib/validations";
+
 export function PainArea() {
 
+  const [isOtherClicked, setIsOtherClicked] = useState(false)
+
+
     const {nextStep,dataForm,setDataForm} = useData()
+
+    const isValid = stepTwoSchema.safeParse(dataForm).success
+    
+      const result = stepTwoSchema.safeParse(dataForm)
+
+    console.log(isValid)
+    console.log(result)
+
+    useEffect(() => {
+  if (dataForm.painArea.includes('other')) {
+    setIsOtherClicked(true);
+  } else {
+    setIsOtherClicked(false);
+
+    // Solo limpia si realmente hay algo en painAreaOther
+    if (dataForm.painAreaOther !== '') {
+      setDataForm((prev) => ({
+        ...prev,
+        painAreaOther: ''
+      }));
+    }
+  }
+}, [dataForm.painArea, dataForm.painAreaOther])
+
+    
+
+   
 
 
 
@@ -27,6 +65,24 @@ export function PainArea() {
         </h2>
       </div>
 
+      <legend  
+     className={`
+
+      
+       
+    overflow-hidden
+    text-left
+    pt-3
+    text-xs
+    transition-all duration-300 ease-in-out
+    ${!isValid
+      ? "max-h-40 opacity-100 translate-y-0"
+      : "max-h-0 opacity-0 -translate-y-2"}
+      
+      `}
+      
+      >Please select at least one pain area<span className="text-red-700 text-base font-bold">*</span></legend>
+
       {/* Radio Options */}
       <div className="space-y-3">
         {/* Knee */}
@@ -41,12 +97,25 @@ export function PainArea() {
         ">
           <span className="text-base text-gray-900">Knee</span>
           <input
-          
-           onChange={(e) => setDataForm((prev) => ({
-             ...prev,
-             painArea:e.target.value
-           }))}
-            type="radio"
+
+            checked={dataForm.painArea.includes("knee")}
+            onChange={(e) =>  
+
+              {
+                const {value,checked} = e.target
+
+                setDataForm((prev) => ({
+                  ...prev,
+                  painArea:checked? [...prev.painArea, value]:prev.painArea.filter((item) => item !== value),
+                }));
+              }
+
+             }
+
+              
+                
+           
+            type="checkbox"
             name="painArea"
             value="knee"
             className="w-5 h-5 text-[#3d4f3a] focus:ring-[#3d4f3a]"
@@ -65,11 +134,25 @@ export function PainArea() {
         ">
           <span className="text-base text-gray-900">Shoulder</span>
           <input
-          onChange={(e) => setDataForm((prev) => ({
-             ...prev,
-             painArea:e.target.value
-           }))}
-            type="radio"
+
+          checked={dataForm.painArea.includes("shoulder")}
+            onChange={(e) =>  
+
+              {
+                const {value,checked} = e.target
+
+                setDataForm((prev) => ({
+                  ...prev,
+                  painArea:checked? [...prev.painArea, value]:prev.painArea.filter((item) => item !== value),
+                }));
+              }
+
+             }
+          
+          
+            
+
+            type="checkbox"
             name="painArea"
             value="shoulder"
             className="w-5 h-5 text-[#3d4f3a] focus:ring-[#3d4f3a]"
@@ -88,11 +171,21 @@ export function PainArea() {
         ">
           <span className="text-base text-gray-900">Back</span>
           <input
-          onChange={(e) => setDataForm((prev) => ({
-             ...prev,
-             painArea:e.target.value
-           }))}
-            type="radio"
+       
+          checked={dataForm.painArea.includes("back")}
+            onChange={(e) =>  
+
+              {
+                const {value,checked} = e.target
+
+                setDataForm((prev) => ({
+                  ...prev,
+                  painArea:checked? [...prev.painArea, value]:prev.painArea.filter((item) => item !== value),
+                }));
+              }
+
+             }
+            type="checkbox"
             name="painArea"
             value="back"
             className="w-5 h-5 text-[#3d4f3a] focus:ring-[#3d4f3a]"
@@ -111,11 +204,21 @@ export function PainArea() {
         ">
           <span className="text-base text-gray-900">Other</span>
           <input
-          onChange={(e) => setDataForm((prev) => ({
-             ...prev,
-             painArea:e.target.value
-           }))}
-            type="radio"
+         
+          checked={dataForm.painArea.includes("other")}
+            onChange={(e) =>  
+
+              {
+                const {value,checked} = e.target
+
+                setDataForm((prev) => ({
+                  ...prev,
+                  painArea:checked? [...prev.painArea, value]:prev.painArea.filter((item) => item !== value),
+                }));
+              }
+
+             }
+            type="checkbox"
             name="painArea"
             value="other"
             className="w-5 h-5 text-[#3d4f3a] focus:ring-[#3d4f3a]"
@@ -123,59 +226,58 @@ export function PainArea() {
         </label>
 
         {/* Other - Text Input (se muestra si seleccionan "Other") */}
-        <div className="pl-4">
-          <label className="block text-sm font-normal text-gray-500 mb-2">
-            Please specify
-          </label>
-          <textarea
-            placeholder="Type here"
-            rows={3}
-            className="
-              w-full px-4 py-3
-              border border-gray-300 rounded-xl
-              bg-white
-              text-gray-900 text-base
-              placeholder:text-gray-400
-              focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300
-              resize-none
-              transition-all
-            "
-          />
-        </div>
+             
+             <div
+  className={`
+    pl-4
+    overflow-hidden
+    transition-all duration-300 ease-in-out
+    ${isOtherClicked
+      ? "max-h-40 opacity-100 translate-y-0"
+      : "max-h-0 opacity-0 -translate-y-2"}
+  `}
+>
+  <label className="block text-sm font-normal text-gray-500 mb-2">
+    Please specify
+  </label>
+
+  <textarea
+  value={dataForm.painAreaOther}
+    onChange={(e) => {
+      const {value} = e.target
+
+      setDataForm((prev) => ({
+        ...prev,
+        painAreaOther:value
+      }))
+
+    }}
+    placeholder="Type here"
+    rows={3}
+    className="
+      w-full px-4 py-3
+      border border-gray-300 rounded-xl
+      bg-white
+      text-gray-900 text-base
+      placeholder:text-gray-400
+      focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300
+      resize-none
+      transition-all
+    "
+  />
+</div>
       </div>
 
       {/* Continue Button */}
-      <button
-      onClick={nextStep}
-        className="
-          w-full py-4 px-6 rounded-xl
-          bg-[#3d4f3a] hover:bg-[#2f3f2c]
-          text-white font-medium text-base
-          transition-all duration-200
-          flex items-center justify-center gap-2
-          mt-8
-        "
-      >
-        Continue
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2.5}
-            d="M13 7l5 5m0 0l-5 5m5-5H6"
-          />
-        </svg>
-      </button>
+
+            <ContinueButton isValid={isValid} />
 
       {/* Disclaimer */}
       <p className="text-sm text-gray-500 text-center mt-6 px-4 leading-relaxed">
         This is an in-home treatment. If you are not located in one of our service areas, travel will be required.
       </p>
+
+      <StepIndicator />
     </div>
   );
 }
