@@ -8,58 +8,64 @@ import StepIndicator from "./StepIndicator";
 import Swal from "sweetalert2";
 import LoadingOverlay from "../utils/LoadingOverlay";
 
+import { createClient } from "@supabase/supabase-js";
+
 const InterestLevel = () => {
   const { nextStep, dataForm, setDataForm, initialDataForm } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isValid = stepFourSchema.safeParse(dataForm).success;
 
-  async function handleFinalSubmit() {
-    const result = finalSchema.safeParse(dataForm);
+async function handleFinalSubmit() {
+  const result = finalSchema.safeParse(dataForm);
 
-    if (!result.success) {
-      console.log(result.error.issues);
+  if (!result.success) {
+    console.log(result.error.issues);
+    return;
+  }
+
+  try {
+    setIsSubmitting(true);
+
+    // Crear client de Supabase
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    // Insertar datos en la tabla 'giveaway'
+    const { data, error } = await supabase.from("FormData").insert([dataForm]);
+
+    if (error) {
+      console.error(error);
+      Swal.fire({
+        title: "Oops!",
+        text: error.message || "Something went wrong!",
+        confirmButtonText: "Got it",
+        confirmButtonColor: "#3d4f3a",
+      });
       return;
     }
 
-    try {
-      setIsSubmitting(true);
+    console.log("Datos insertados:", data);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/giveaway`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataForm),
-        },
-      );
+    // Simular tiempo de espera
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
-      const res = await response.json();
-      console.log(res);
-
-      if (!response.ok) {
-        Swal.fire({
-          title: "Oops!",
-          text: res.message,
-          confirmButtonText: "Got it",
-          confirmButtonColor: "#3d4f3a",
-        });
-
-        return;
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      nextStep();
-      setDataForm(initialDataForm);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    nextStep();
+    setDataForm(initialDataForm);
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: "Oops!",
+      text: "Something went wrong!",
+      confirmButtonText: "Got it",
+      confirmButtonColor: "#3d4f3a",
+    });
+  } finally {
+    setIsSubmitting(false);
   }
+}
 
   return (
     <div className="relative space-y-6">
