@@ -79,7 +79,7 @@ Supabase / PostgreSQL
 
 Setup & Installation
 Clone the repository
-git clone <YOUR_REPO_URL>
+git clone https://github.com/johnDev-90/thrivelab-giveaway.git
 cd thrivelab-giveaway
 
 Install dependencies
