@@ -3,9 +3,10 @@ thrivelab-giveaway
 Multi-step Giveaway Form
 A multi-step form to collect user information, validate emails and phone numbers, and persist data across accidental refreshes or navigation between steps. Built with modern frontend and backend technologies following best practices for scalability and user experience.
 
-Figma Prototype
+Figma Prototype: https://www.figma.com/design/FgdaHAv4fR5Zf4fRFf6ukA/For-Dev?node-id=0-1&p=f&t=n0elvqs2jgE88xSr-0
 
-Live Demo
+Live Demo: https://thrivelab-giveaway.vercel.app/
+
 
 Table of Contents
 
@@ -40,6 +41,7 @@ Step 3: Why Not Yet? (multi-select)
 Step 4: Interest Level (single select)
 
 Step 5: Confirmation page after submission
+
 
 Key Features:
 
@@ -114,7 +116,6 @@ Backend (server/.env)
 DATABASE_URL="your Supabase database URL with credentials"
 
 
-The frontend environment variables are safe to expose publicly. The backend variable contains secrets and should not be shared publicly.
 
 Architecture & Design Decisions
 
